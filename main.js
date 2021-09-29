@@ -1,141 +1,98 @@
-canvas = new fabric.Canvas('myCanvas')
 
-block_img_width = 30;
-block_img_height = 30;
+var canvas = new fabric.Canvas('myCanvas')
+ball_y = 0;
+ball_x = 0;
+hole_y = 400;
+hole_x = 800;
 
-playerX = 10;
-playerY = 10;
+block_image_width = 5;
+block_image_height = 5;
 
-player_object = ""
-block_img_object = ""
-
-
-function player_update() {
-    fabric.Image.fromURL("player.png", function (Img) {
-        player_object = Img
-
-        player_object.scaleToWidth(150)
-        player_object.scaleToHeight(140)
-        player_object.set({
-            top: playerY,
-            left: playerX
-        })
-        canvas.add(player_object)
-    })
+function load_img() {
+	fabric.Image.fromURL("golf-h.png", function (Img) {
+		hole_obj = Img;
+		hole_obj.scaleToWidth(50);
+		hole_obj.scaleToHeight(50);
+		hole_obj.set({
+			top: hole_y,
+			left: hole_x
+		});
+		canvas.add(hole_obj);
+	});
+	new_image();
 }
 
-function newImage(get_image) {
-    fabric.Image.fromURL(get_image, function (Img) {
-        block_img_object = Img
+function new_image() {
+	fabric.Image.fromURL("ball.png", function (Img) {
+		ball_obj = Img;
+		ball_obj.scaleToWidth(50);
+		ball_obj.scaleToHeight(50);
+		ball_obj.set({
+			top: ball_y,
+			left: ball_x
+		});
+		canvas.add(ball_obj);
+	});
 
-        block_img_object.scaleToWidth(block_img_width)
-        block_img_object.scaleToHeight(block_img_height)
-        block_img_object.set({
-            top: playerY,
-            left: playerX
-        })
-        canvas.add(block_img_object)
-    })
+	window.addEventListener("keydown", my_keydown);
+
+	function my_keydown(e) {
+		keyPressed = e.keyCode;
+		console.log(keyPressed);
+		if ((ball_x == hole_x) && (ball_y == hole_y)) {
+			canvas.remove(ball_obj);
+
+			document.getElementById("hd3").innerHTML = "You have hit the goal!!!";
+			document.getElementById("myCanvas").style.borderColor = "red";
+		}
+
+		else {
+			if (keyPressed == '38') {
+				up();
+				console.log("up");
+			}
+			if (keyPressed == '40') {
+				down();
+				console.log("down");
+			}
+			if (keyPressed == '37') {
+				left();
+				console.log("left");
+			}
+			if (keyPressed == '39') {
+				right();
+				console.log("right");
+			}
+		}
+	}
+	function up() {
+		if (ball_y > 0) {
+			ball_y = ball_y - 20
+			canvas.remove(ball_obj)
+			new_image()
+		}
+	}
+
+	function down() {
+		if (ball_y < 450) {
+			ball_y = ball_y + 20
+			canvas.remove(ball_obj)
+			new_image()
+		}
+	}
+	function left() {
+		if (ball_x > 5) {
+			ball_x = ball_x - 20
+			canvas.remove(ball_obj)
+			new_image()
+		}
+	}
+
+	function right() {
+		if (ball_x <= 1050) {
+			ball_x = ball_x + 20
+			canvas.remove(ball_obj)
+			new_image()
+		}
+	}
 }
-window.addEventListener("keydown", mykeydown)
-
-function mykeydown(e) {
-    keypressed = e.keyCode
-    if (e.shiftKey == true && keypressed == '80') {
-        block_img_width = block_img_width + 10
-        block_img_height = block_img_height + 10
-        document.getElementById("current_width").innerHTML = block_img_width
-        document.getElementById("current_height").innerHTML = block_img_height
-    }
-
-    if (e.shiftKey == true && keypressed == '77') {
-        block_img_width = block_img_width - 10
-        block_img_height = block_img_height - 10
-        document.getElementById("current_width").innerHTML = block_img_width
-        document.getElementById("current_height").innerHTML = block_img_height
-    }
-    if (keypressed == '37') {
-        left()
-    }
-
-    if (keypressed == '38') {
-        up()
-    }
-
-    if (keypressed == '39') {
-        right()
-    }
-
-    if (keypressed == '40') {
-        down()
-    }
-
-    if (keypressed == '87') {
-        newImage("wall.jpg")
-    }
-
-    if (keypressed == '67') {
-        newImage("cloud.jpg")
-    }
-
-    if (keypressed == '68') {
-        newImage("dark_green.png")
-    }
-
-    if (keypressed == '71') {
-        newImage("ground.png")
-    }
-
-    if (keypressed == '76') {
-        newImage("light_green.png")
-    }
-
-    if (keypressed == '82') {
-        newImage("roof.jpg")
-    }
-
-    if (keypressed == '84') {
-        newImage("trunk.jpg")
-    }
-
-    if (keypressed == '85') {
-        newImage("unique.png")
-    }
-
-    if (keypressed == '89') {
-        newImage("yellow_wall.png")
-    }
-}
-
-function left(){
-    if(playerX>0){
-        playerX=playerX-10;
-        canvas.remove(player_object)
-        player_update()
-    }
-}
-
-function right(){
-    if(playerX<750){
-        playerX=playerX+10;
-        canvas.remove(player_object)
-        player_update()
-    }
-}
-
-function up(){
-    if(playerY>0){
-        playerY=playerY-10;
-        canvas.remove(player_object)
-        player_update()
-    }
-}
-
-function down(){
-    if(playerY<550){
-        playerY=playerY+10;
-        canvas.remove(player_object)
-        player_update()
-    }
-}
-
